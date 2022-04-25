@@ -27,5 +27,14 @@ function analysis(
     _fft(sc, 1) # Convert segments to frequency-domain
 end
 
+function analysis(
+    xs::AbstractArray{<:AbstractVector{T}},
+    w::AbstractVector{T},
+    L::Integer = 0,
+    N::Integer = length(w);
+)::AbstractArray{<:AbstractMatrix{<:Complex}} where {T<:Number}
+    [analysis(x, w, L, N) for x ∈ xs]
+end
+
 
 end # module
