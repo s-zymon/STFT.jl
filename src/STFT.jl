@@ -101,4 +101,34 @@ function analysis(
 end
 
 
+
+
+function synthesis(
+    X::AbstractMatrix{<:Complex},
+    w::AbstractVector{<:Real},
+    L::Integer = 0,
+    N::Integer = length(w);
+)::AbstractVector{<:Real}
+    S = size(X, 2) # Number of segments
+    W = length(w)  # Length of the window in samples
+    H = W - L      # Hop
+    K = H*(S-1)+W  # Expected length of synthesised signal
+    w² = w.^2      # Squred window
+    xn = zeros(K)  # Allocate memory for time-domain signal; numerator
+    xd = zeros(K)  # Allocate memory for time-domain signal; denominator
+
+    xs = irfft(X, N, 1) # Convert segments to time-domain
+
+    for s ∈ 1:S
+        ss = (s-1)*H # Segment start
+        for k = 1:W
+            xn[ss+k] += xs[k, s] * w[k]
+            xd[ss+k] += w²[k]
+        end
+    end
+    xn ./ xd # Normalize
+end
+
+
+
 end # module
