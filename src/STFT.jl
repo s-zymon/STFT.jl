@@ -2,15 +2,19 @@ module STFT
 
 using FFTW
 
+export stft, istft
 
 _fft(x::AbstractMatrix{<:Real}, d) = rfft(x, d)
 _fft(x::AbstractMatrix{<:Complex}, d) = fft(x, d)
 
 
 
-"""
+doc_analysis = """
     analysis(x::Vector, w::Vector, L=0, N=length(w)) -> Matrix
     analysis(x::Array{Vector}, w::Vector, L=0, N=length(w)) -> Array{Matrix}
+
+    stft(x::Vector, w::Vector, L=0, N=length(w)) -> Matrix
+    stft(x::Array{Vector}, w::Vector, L=0, N=length(w)) -> Array{Matrix}
 
 
 Analyse discrete time-domain signal ``\\mathrm{x}[n]``
@@ -68,9 +72,26 @@ L = W - H       # Overlap
 
 X = STFT.analysis(x, w, L)  # Analysis
 ```
+
+```julia
+using STFT
+
+x = rand(100)   # Generate mock signal
+W = 64          # Window length
+w = ones(W)     # Rectangular analysis window
+H = 4           # Hop
+L = W - H       # Overlap
+
+X  = stft(x, w, L)  # Analysis
+```
+
 """
-function analysis()
-end
+
+"$doc_analysis"
+function analysis() end
+
+"$doc_analysis"
+stft(x, w, L=0, N=length(w)) = analysis(x, w, L, N)
 
 function analysis(
     x::AbstractVector{T},
@@ -102,9 +123,10 @@ end
 
 
 
-
-"""
+doc_synthesis = """
     synthesis(X::Matrix, w::Vector, L=0, N=length(w)) -> Vector
+
+    istft(X::Matrix, w::Vector, L=0, N=length(w)) -> Vector
 
 Syntesise discrete time-domain signal ``y[n]`` from STFT-domain signal
 ``Y_w[sH, n]``.
@@ -163,6 +185,20 @@ X  = STFT.analysis(x, w, L)  # Analysis
 xr = STFT.synthesis(X, w, L) # Synthesis
 ```
 
+```julia
+using STFT
+
+x = rand(100)   # Generate mock signal
+W = 64          # Window length
+w = ones(W)     # Rectangular analysis window
+H = 4           # Hop
+L = W - H       # Overlap
+
+X  = stft(x, w, L)  # Analysis
+xr = istft(X, w, L) # Synthesis
+```
+
+
 # References
 1. D. Griffin and J. Lim, “Signal estimation from modified short-time
    Fourier transform,” IEEE Transactions on Acoustics, Speech, and
@@ -171,8 +207,12 @@ xr = STFT.synthesis(X, w, L) # Synthesis
    \\[[IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/1164317),
    [pdf](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.331.7151&rep=rep1&type=pdf)\\]
 """
-function synthesis()
-end
+
+"$doc_synthesis"
+function synthesis() end
+
+"$doc_synthesis"
+isftf(X, w, L=0, N=length(w)) = synthesis(X, w, L, N)
 
 function synthesis(
     X::AbstractMatrix{<:Complex},
@@ -199,7 +239,5 @@ function synthesis(
     end
     xn ./ xd # Normalize
 end
-
-
 
 end # module

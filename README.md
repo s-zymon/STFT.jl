@@ -3,7 +3,7 @@
 
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://docs.zymon.org/STFT.jl/)
 
-`STFT.jl` is a julia package implementing Short-Time Fourier Transform routines.
+`STFT.jl` is a Julia package implementing Short-Time Fourier Transform (STFT) routines.
 It provides signal analysis (time-domain signal to STFT-domain signal; stft)
 and signal synthesis (STFT-domain siganl to time-domain signal; istft).
 
