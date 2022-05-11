@@ -204,8 +204,7 @@ xr = istft(X, w, L) # Synthesis
    Fourier transform,” IEEE Transactions on Acoustics, Speech, and
    Signal Processing, vol. 32, no. 2, pp. 236–243, Apr. 1984,
    doi: 10.1109/TASSP.1984.1164317.
-   \\[[IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/1164317),
-   [pdf](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.331.7151&rep=rep1&type=pdf)\\]
+   \\[[IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/1164317)\\]
 """
 
 "$doc_synthesis"
