@@ -12,16 +12,20 @@ Check the [documentation](https://docs.zymon.org/STFT.jl/) for more insights.
 
 ## Installation
 
-The package is currently not available in [General](https://github.com/JuliaRegistries/General), the default Julia package registry.
-
-To install it, use the following command in Julia package manager:
+The package is currently available in General, the default Julia package registry.
+To install this package from General registry, use the following command in Julia REPL:
+```julia
+] add STFT
+```
+Alternatively, directly via repository:
 ```julia
 pkg> add https://github.com/s-zymon/STFT.jl
 ```
 
+
 ## Examples
 
-Below you can find a few standalone example with basic usage of the package.
+Below you can find a few standalone examples with basic usage of the package.
 
 ### Show spectrogram
 
