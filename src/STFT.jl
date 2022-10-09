@@ -211,7 +211,7 @@ xr = istft(X, w, L) # Synthesis
 function synthesis() end
 
 "$doc_synthesis"
-isftf(X, w, L=0, N=length(w)) = synthesis(X, w, L, N)
+istft(X, w, L=0, N=length(w)) = synthesis(X, w, L, N)
 
 function synthesis(
     X::AbstractMatrix{<:Complex},
