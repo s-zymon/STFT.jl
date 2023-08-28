@@ -19,7 +19,7 @@ To install this package from General registry, use the following command in Juli
 ```
 Alternatively, directly via repository:
 ```julia
-pkg> add https://git.sr.ht/~zymon/STFT.jl
+pkg> add https://codeberg.org/zymon/STFT.jl
 ```
 
 
