@@ -1,5 +1,6 @@
 module STFT
 
+using LoopVectorization
 using FFTW
 
 export stft, istft
@@ -106,7 +107,7 @@ function analysis(
     N = N < W ? W : N   # DFT size
     sc = zeros(T, N, S) # Allocate container for signal segments
 
-    for s ∈ 1:S, n ∈ 1:W # Slice the signal
+    @turbo for s ∈ 1:S, n ∈ 1:W # Slice the signal
         sc[n, s] = w[n] * x[(s-1)*H+n]
     end
     _fft(sc, 1) # Convert segments to frequency-domain
@@ -229,7 +230,7 @@ function synthesis(
 
     xs = irfft(X, N, 1) # Convert segments to time-domain
 
-    for s ∈ 1:S
+    @turbo for s ∈ 1:S
         ss = (s-1)*H # Segment start
         for n = 1:W
             xn[ss+n] += xs[n, s] * w[n]
