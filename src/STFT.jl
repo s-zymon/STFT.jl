@@ -95,20 +95,29 @@ function analysis() end
 stft(x, w, L=0, N=length(w)) = analysis(x, w, L, N)
 
 function analysis(
-    x::AbstractVector{T},
-    w::AbstractVector{T},
-    L::Integer = 0,
-    N::Integer = length(w);
-)::AbstractMatrix{<:Complex} where {T<:Number}
-    X = length(x)       # Length of the signal in samples
+    x::V,
+    w::V,
+    L::I = zero(I),
+    N::I = length(w);
+)::Matrix{T |> complex} where {T<:Number, I<:Integer, V<:AbstractVector{T}}
+    analysis((@view x[:,:]), w, L, N)
+end
+
+function analysis(
+    x::M,
+    w::V,
+    L::I = zero(I),
+    N::I = length(w);
+) where {T<:Number, I<:Integer, V<:AbstractVector{T}, M<:AbstractMatrix{T}}
+    X, K = size(x)      # Length of the signal in samples
     W = length(w)       # Length of the window in samples
     H = W - L           # Hop
     S = (X-L) ÷ H       # Number of segments
     N = N < W ? W : N   # DFT size
-    sc = zeros(T, N, S) # Allocate container for signal segments
+    sc = zeros(T, N, S, K) # Allocate container for signal segments
 
-    @turbo for s ∈ 1:S, n ∈ 1:W # Slice the signal
-        sc[n, s] = w[n] * x[(s-1)*H+n]
+    @turbo for s ∈ 1:S, k ∈ 1:K, n ∈ 1:W
+        sc[n, s, k] = w[n] * x[(s-1)*H+n, k]
     end
     _fft(sc, 1) # Convert segments to frequency-domain
 end
