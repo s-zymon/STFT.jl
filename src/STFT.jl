@@ -5,8 +5,8 @@ using FFTW
 
 export stft, istft
 
-_fft(x::AbstractMatrix{<:Real}, d) = rfft(x, d)
-_fft(x::AbstractMatrix{<:Complex}, d) = fft(x, d)
+_fft(x::AbstractArray{<:Real}, d) = rfft(x, d)
+_fft(x::AbstractArray{<:Complex}, d) = fft(x, d)
 
 
 
@@ -100,7 +100,8 @@ function analysis(
     L::I = zero(I),
     N::I = length(w);
 )::Matrix{T |> complex} where {T<:Number, I<:Integer, V<:AbstractVector{T}}
-    analysis((@view x[:,:]), w, L, N)
+    xx = @view x[:,:]
+    @view analysis(xx, w, L, N)[:, :, 1]
 end
 
 function analysis(
