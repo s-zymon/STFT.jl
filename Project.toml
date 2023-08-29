@@ -1,7 +1,7 @@
 name = "STFT"
 uuid = "58bb99bf-048b-48b7-93e7-1cbf3ee61509"
 authors = ["Szymon M. Woźniak <s@zymon.org>"]
-version = "1.2.0"
+version = "1.2.1"
 
 [deps]
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
