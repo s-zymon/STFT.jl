@@ -249,8 +249,8 @@ function synthesis(
 
     xs = irfft(X, N, 1) # Convert segments to time-domain
 
-    @turbo for s ∈ 1:S
-        ss = (s-1)*H # Segment start
+    @turbo for s ∈ 0:(S-1)
+        ss = s*H # Segment shift
         for n = 1:W
             xn[ss+n] += xs[n, s] * w[n]
             xd[ss+n] += w²[n]
