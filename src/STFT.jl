@@ -252,7 +252,7 @@ function synthesis(
     @turbo for s ∈ 0:(S-1)
         ss = s*H # Segment shift
         for n = 1:W
-            xn[ss+n] += xs[n, s] * w[n]
+            xn[ss+n] += xs[n, s+1] * w[n]
             xd[ss+n] += w²[n]
         end
     end
