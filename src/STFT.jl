@@ -12,13 +12,13 @@ function malloc_stft(
     x::M,
     w::V,
     L::I = zero(I),
-    N::I = length(w);
-) where {T<:Number, I<:Integer, V<:AbstractVector{T}, M<:AbstractMatrix{T}}
+    N::I = length(w)
+) where {T<:Number,I<:Integer,V<:AbstractVector{T},M<:AbstractMatrix{T}}
     X, K = size(x)      # Length of the signal in samples
     W = length(w)       # Length of the window in samples
-    S = (X-L) ÷ (W - L) # Number of segments
+    S = (X - L) ÷ (W - L) # Number of segments
     N = N < W ? W : N   # DFT size
-    zeros(T, (N, S, K)) # Allocate container for signal segments
+    return zeros(T, (N, S, K)) # Allocate container for signal segments
 end
 
 
@@ -109,36 +109,36 @@ stft(x, w, L=0, N=length(w)) = analysis(x, w, L, N)
 function analysis(
     x::M,
     w::V,
-    L::I = zero(I),
-    N::I = length(w);
-) where {T<:Number, I<:Integer, V<:AbstractVector{T}, M<:AbstractMatrix{T}}
+    L::I=zero(I),
+    N::I=length(w)
+) where {T<:Number,I<:Integer,V<:AbstractVector{T},M<:AbstractMatrix{T}}
     sc = malloc_stft(x, w, L, N)
     N, S, K = sc |> size
     W = w |> length
 
-    @turbo for k ∈ 1:K, s ∈ 1:S, n ∈ 1:W
+    @turbo for k in 1:K, s in 1:S, n in 1:W
         sc[n, s, k] = w[n] * x[(s-1)*(W-L)+n, k]
     end
-    _fft(sc, 1) # Convert segments to frequency-domain
+    return _fft(sc, 1) # Convert segments to frequency-domain
 end
 
 function analysis(
     x::V,
     w::V,
-    L::I = zero(I),
-    N::I = length(w);
-)::Matrix{T |> complex} where {T<:Number, I<:Integer, V<:AbstractVector{T}}
-    xx = @view x[:,:]
-    @view analysis(xx, w, L, N)[:, :, 1]
+    L::I=zero(I),
+    N::I=length(w)
+)::Matrix{T |> complex} where {T<:Number,I<:Integer,V<:AbstractVector{T}}
+    xx = @view x[:, :]
+    return @view analysis(xx, w, L, N)[:, :, 1]
 end
 
 function analysis(
     xs::AbstractArray{<:AbstractVector{T}},
     w::AbstractVector{T},
-    L::Integer = 0,
-    N::Integer = length(w);
+    L::Integer=0,
+    N::Integer=length(w)
 )::AbstractArray{<:AbstractMatrix{<:Complex}} where {T<:Number}
-    [analysis(x, w, L, N) for x ∈ xs]
+    return [analysis(x, w, L, N) for x in xs]
 end
 
 
@@ -236,27 +236,27 @@ istft(X, w, L=0, N=length(w)) = synthesis(X, w, L, N)
 function synthesis(
     X::AbstractMatrix{<:Complex},
     w::AbstractVector{<:Real},
-    L::Integer = 0,
-    N::Integer = length(w);
+    L::Integer=0,
+    N::Integer=length(w)
 )::AbstractVector{<:Real}
     S = size(X, 2) # Number of segments
     W = length(w)  # Length of the window in samples
     H = W - L      # Hop
-    K = H*(S-1)+W  # Expected length of synthesised signal
-    w² = w.^2      # Squred window
+    K = H * (S - 1) + W  # Expected length of synthesised signal
+    w² = w .^ 2      # Squred window
     xn = zeros(K)  # Allocate memory for time-domain signal; numerator
     xd = zeros(K)  # Allocate memory for time-domain signal; denominator
 
     xs = irfft(X, N, 1) # Convert segments to time-domain
 
-    @turbo for s ∈ 0:(S-1)
-        ss = s*H # Segment shift
-        for n = 1:W
+    @turbo for s in 0:(S-1)
+        ss = s * H # Segment shift
+        for n in 1:W
             xn[ss+n] += xs[n, s+1] * w[n]
             xd[ss+n] += w²[n]
         end
     end
-    xn ./ xd # Normalize
+    return xn ./ xd # Normalize
 end
 
 """
@@ -268,10 +268,10 @@ function rSTFTm(A, w, L, N=length(w))
     W = w |> length
     P = plan_rfft(mem, 1)
     function f(x)
-        @turbo for k ∈ 1:K, s ∈ 1:S, n ∈ 1:W
+        @turbo for k in 1:K, s in 1:S, n in 1:W
             mem[n, s, k] = w[n] * x[(s-1)*(W-L)+n, k]
         end
-        P * mem
+        return P * mem
     end
     return f
 end
